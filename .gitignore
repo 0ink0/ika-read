@@ -1,0 +1,6 @@
+node_modules/
+
+*.ikax
+*.json
+*.realm
+*.realm.lock
