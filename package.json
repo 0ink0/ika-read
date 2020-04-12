@@ -1,0 +1,11 @@
+{
+  "name": "ika-read",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0ink0/ika-read.git"
+  },
+  "dependencies": {
+    "realm": "^5.0.3"
+  }
+}
