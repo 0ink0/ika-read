@@ -34,13 +34,17 @@ let acc = (arr, game) => {
     return arr;
 };
 let accStages = (map, game) => {
-    if (!map.has(game.stage.name)) {
-        map.set(game.stage.name, {
+    if (!map.has(game.player.weapon.name)) {
+        map.set(game.player.weapon.name, new Map());
+    }
+    let wMap = map.get(game.player.weapon.name);
+    if (!wMap.has(game.stage.name)) {
+        wMap.set(game.stage.name, {
             winCount: 0,
             lossCount: 0,
         });
     }
-    let stat = map.get(game.stage.name);
+    let stat = wMap.get(game.stage.name);
     stat.winCount += game.win ? 1 : 0;
     stat.lossCount += game.win ? 0 : 1;
     return map;
@@ -63,23 +67,25 @@ console.log(
     .join('\n')
 );
 
-console.log('\n* Stages:');
 console.log(
     Array.from(data
         .reduce(accStages, new Map())
     )
-    .map(([stage, stat]) => {
-        let count = stat.winCount + stat.lossCount;
-        return [stage, stat.winCount / count * 100, count];
-    })
-    .sort((l, r) => (r[1] - l[1]))
-    .map(([stage, winRate, count]) => {
-        return [
-            `${stage.padEnd(24, ' ')}`,
-            `win rate: ${fmt(winRate, 3)}%`,
-            `matches: ${fmt(count, 2)}`,
-        ].join(', ');
-    })
+    .map(([weapon, wMap]) => `\n* ${weapon}:\n` +
+        Array.from(wMap).map(([stage, stat]) => {
+            let count = stat.winCount + stat.lossCount;
+            return [stage, stat.winCount / count * 100, count];
+        })
+        .sort((l, r) => (r[1] - l[1]))
+        .map(([stage, winRate, count]) => {
+            return [
+                `${stage.padEnd(24, ' ')}`,
+                `win rate: ${fmt(winRate, 3)}%`,
+                `matches: ${fmt(count, 2)}`,
+            ].join(', ');
+        })
+        .join('\n')
+    )
     .join('\n')
 );
 
